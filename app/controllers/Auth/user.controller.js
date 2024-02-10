@@ -2,6 +2,8 @@ const passport = require("passport");
 
 const Controller = require("../controller");
 
+const Users = require("../../models/Users");
+
 class UserController extends Controller {
     async loginPage(req, res, next) {
         try {
@@ -21,7 +23,6 @@ class UserController extends Controller {
     }
     async handleLogin(req, res, next) {
         try {
-            console.log(req.body);
 
             passport.authenticate("local", {
                 successRedirect: "/dashboard",
@@ -34,8 +35,31 @@ class UserController extends Controller {
             next(error);
         }
     }
+    async handleSingUp(req, res, next) {
+        try {
+            const { fullName, email, password } = req.body;
+            console.log(req.body);
+            const user = await Users.findOne({ email });
+
+            if (user) {
+                return res.render("register", {
+                    pageTitle: "ثبت نام کاربر",
+                    path: "/register",
+                    error: { message: "کاربری با این ایمیل موجود است" },
+                });
+            }
+
+            await Users.create({ fullName, email, password });
+
+            req.flash("success_msg", "ثبت نام موفقیت آمیز بود.");
+            res.redirect("/dashboard");
+        } catch (error) {
+            console.log(error);
+            next(error);
+        }
+    }
     async rememberMe(req, res) {
-        console.log("******************** remember ==> ", req.body.remember);
+        
         if (req.body.remember) {
             req.session.cookie.originalMaxAge = 168 * 60 * 60 * 1000; // 7 day 24
         } else {
@@ -46,12 +70,7 @@ class UserController extends Controller {
     logout(req, res, next) {
         try {
             req.session = null;
-            req.logout(function (err) {
-                if (err) {
-                    return next(err);
-                }
-                res.redirect("/login");
-            });
+            return res.clearCookie("connect.sid").redirect("/");
         } catch (error) {
             next(error);
         }

@@ -13,7 +13,7 @@ passport.use(
                     message: "کاربری با این ایمیل ثبت نشده",
                 });
             }
-            const isMatch = await bcrypt.compare(password, user.Password);
+            const isMatch = await bcrypt.compare(password, user.password);
             if (isMatch) {
                 return done(null, user); //req.user
             } else {
