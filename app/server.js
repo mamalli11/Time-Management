@@ -49,7 +49,6 @@ module.exports = class Application {
         });
         mongoose.connection.on("connected", () => {
             console.log("mongoose connected to DB ✔");
-            require("./config/CreateData").createData();
         });
         mongoose.connection.on("disconnected", () => {
             console.log("mongoose connection is disconnected ❌");
@@ -71,10 +70,10 @@ module.exports = class Application {
         });
     }
     initClientSession() {
-        this.#app.use(cookieParser("BHLXhOEr9pk9"));
+        this.#app.use(cookieParser(process.env.COOKIE_PARSER_SECRET_KEY));
         this.#app.use(
             session({
-                secret: "BHLXhOEr9pk9",
+                secret: process.env.SESSION_SECRET,
                 resave: false,
                 saveUninitialized: false,
                 unset: "destroy",

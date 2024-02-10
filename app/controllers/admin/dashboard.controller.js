@@ -6,8 +6,6 @@ class DashboardController extends Controller {
             res.render("private/dashboard", {
                 path: "/dashboard",
                 layout: "./layouts/dashLayout",
-                // UserLength: await Users.find().countDocuments(),
-                // ProductLength: await Products.find().countDocuments(),
             });
         } catch (err) {
             console.log(err);

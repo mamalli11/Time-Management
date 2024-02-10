@@ -4,13 +4,13 @@
     </div>
     <div class="sidebar-wrapper">
         <ul class="nav">
-            <li class="nav-item active">
+            <li class="nav-item <%= path === "/dashboard" ? 'active' : '' %>">
                 <a class="nav-link" href="/dashboard">
                     <i class="material-icons">dashboard</i>
                     <p>داشبورد</p>
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item <%= path === "/profile" ? 'active' : '' %>">
                 <a class="nav-link" href="/dashboard/profile">
                     <i class="material-icons">person</i>
                     <p>پروفایل کاربر</p>
