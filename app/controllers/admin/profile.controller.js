@@ -6,9 +6,15 @@ class ProfileController extends Controller {
             res.render("private/profile/index", {
                 path: "/profile",
                 layout: "./layouts/dashLayout",
+                user: {
+                    fullName: req.user.fullName,
+                    email: req.user.email,
+                    phone: req.user.phone,
+                    profile: req.user.profile,
+                    gender: req.user.gender,
+                },
             });
         } catch (err) {
-            console.log(err);
             next(err);
         }
     }

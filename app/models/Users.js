@@ -3,20 +3,25 @@ const bcrypt = require("bcryptjs");
 
 const usersSchema = new mongoose.Schema(
     {
-        Fullname: { type: String, required: true, trim: true },
-        Email: { type: String, required: true, unique: true, trim: true },
-        Phone: { type: String, default: null, maxlength: 11 },
-        Profile: {
+        fullName: { type: String, required: true, trim: true },
+        email: {
             type: String,
-            default: "https://cdn.icon-icons.com/icons2/2643/PNG/512/male_boy_person_people_avatar_icon_159358.png",
+            required: true,
+            unique: true,
+            trim: true,
+            validate: {
+                validator: function (value) {
+                    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+                },
+                message: "Invalid email address format",
+            },
         },
-        Password: { type: String, required: true, minlength: 4, maxlength: 255 },
-        Gender: { type: String, default: "unknown", enum: ["male", "female", "unknown"] },
+        phone: { type: String, default: null, maxlength: 11 },
+        profile: { type: String, default: "https://cdn-icons-png.flaticon.com/512/3541/3541871.png" },
+        password: { type: String, required: true, minlength: 4, maxlength: 255 },
+        gender: { type: String, default: "unknown", enum: ["male", "female", "unknown"] },
         isAdmin: { type: Boolean, default: false },
-        Times: [],
-        Morakhsi: [],
-        MaxMorakhsi: { type: Number, required: true, default: 60, trim: true },
-        TypeMorakhsi: { type: String, default: "entitlement", enum: ["withoutSalary", "illness", "entitlement", "emergency", "educational", "anHour"] },
+        employmentHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: "EmploymentHistory" }],
     },
     {
         timestamps: true,
@@ -26,12 +31,12 @@ const usersSchema = new mongoose.Schema(
 usersSchema.pre("save", function (next) {
     let user = this;
 
-    if (!user.isModified("Password")) return next();
+    if (!user.isModified("password")) return next();
 
-    bcrypt.hash(user.Password, 10, (err, hash) => {
+    bcrypt.hash(user.password, 10, (err, hash) => {
         if (err) return next(err);
 
-        user.Password = hash;
+        user.password = hash;
         next();
     });
 });
@@ -47,7 +52,7 @@ usersSchema.statics.findByCredentials = function (Email, Password) {
         }
 
         return new Promise((resolve, reject) => {
-            bcrypt.compare(Password, user.Password, (err, res) => {
+            bcrypt.compare(Password, user.password, (err, res) => {
                 if (res) {
                     resolve(user);
                 } else {
