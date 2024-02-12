@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-const usersSchema = new mongoose.Schema(
+const usersSchema = new Schema(
     {
         fullName: { type: String, required: true, trim: true },
         email: {
@@ -21,7 +21,7 @@ const usersSchema = new mongoose.Schema(
         password: { type: String, required: true, minlength: 4, maxlength: 255 },
         gender: { type: String, default: "unknown", enum: ["male", "female", "unknown"] },
         isAdmin: { type: Boolean, default: false },
-        employmentHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: "EmploymentHistory" }],
+        employmentHistory: [{ type: Schema.Types.ObjectId, ref: "EmploymentHistory" }],
     },
     {
         timestamps: true,
@@ -63,4 +63,4 @@ usersSchema.statics.findByCredentials = function (Email, Password) {
     });
 };
 
-module.exports = mongoose.model("Users", usersSchema);
+module.exports = model("Users", usersSchema);

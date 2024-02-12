@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose");
 
 const TimeSchema = new Schema({
     date: { type: String, required: true },
-    times: [{ type: String, required: true }],
+    times: [{ type: Object, required: true }],
 });
 
 const LeaveSchema = new Schema({
@@ -33,4 +33,4 @@ const EmploymentHistorySchema = new Schema({
     salaries: [{ type: SalarySchema }],
 });
 
-module.exports = mongoose.model("EmploymentHistory", EmploymentHistorySchema);
+module.exports = model("EmploymentHistory", EmploymentHistorySchema);

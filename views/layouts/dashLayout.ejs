@@ -101,7 +101,7 @@
                 <!-- body  -->
                 <%- body %>
                 <!-- End body -->
-                
+
                 <footer class="footer">
                     <div class="container-fluid">
                         <nav class="float-left">
@@ -119,8 +119,8 @@
                             <script>
                                 document.write(new Date().getFullYear());
                             </script>
-                            , ساخته شده با <i class="material-icons">favorite</i> توسط
-                            <a href="https://github.com/mamalli11" target="_blank"> Mjmn </a> برای وب بهتر.
+                            , ساخته شده با <i class="material-icons">favorite</i> توسط <a href="https://github.com/mamalli11" target="_blank"> Mjmn </a> برای وب
+                            بهتر.
                         </div>
                     </div>
                 </footer>
@@ -134,12 +134,16 @@
         <script src="/assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
         <!--  Google Maps Plugin    -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2Yno10-YTnLjjn_Vtk0V8cdcY5lC4plU"></script>
+        <!--  Axios    -->
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.js"></script>
         <!-- Place this tag in your head or just before your close body tag. -->
         <script async defer src="https://buttons.github.io/buttons.js"></script>
         <!-- Chartist JS -->
         <script src="/assets/js/plugins/chartist.min.js"></script>
         <!--  Notifications Plugin    -->
         <script src="/assets/js/plugins/bootstrap-notify.js"></script>
+        <!--  Plugin for Sweet Alert -->
+        <script src="/assets/js/plugins/sweetalert2.js"></script>
         <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
         <script src="/assets/js/material-dashboard.min.js?v=2.1.2" type="text/javascript"></script>
 
@@ -159,7 +163,7 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
-                $(".inputDatePer").pDatepicker({
+                $(".observer-example").pDatepicker({
                     observer: true,
                     format: "YYYY/MM/DD",
                     altField: ".observer-example-alt",

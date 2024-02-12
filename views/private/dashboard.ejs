@@ -231,7 +231,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="newTimeLabel">ثبت زمان جدید</h5>
+                    <h5 class="modal-title">ثبت زمان جدید</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -242,59 +242,151 @@
                             <div class="col-md-6">
                                 <div class="form-group bmd-form-group">
                                     <label class="bmd-label-static">تاریخ</label>
-                                    <input type="text" class="form-control inputDatePer" />
+                                    <input type="text" class="form-control observer-example" />
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group bmd-form-group">
-                                    <label class="bmd-label-floating">زمان ورود</label>
-                                    <input type="time" class="form-control" />
+
+                        <div id="showPanelInput" style="flex-direction: column; align-items: center">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group bmd-form-group">
+                                        <label class="bmd-label-static">زمان ورود</label>
+                                        <input type="time" class="form-control" id="startTime" name="startTime" />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group bmd-form-group">
-                                    <label class="bmd-label-floating">زمان خروج</label>
-                                    <input type="time" class="form-control" />
+                                <div class="col-md-4">
+                                    <div class="form-group bmd-form-group">
+                                        <label class="bmd-label-static">زمان خروج</label>
+                                        <input type="time" class="form-control" id="endTime" name="endTime" />
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group bmd-form-group">
-                                    <label class="bmd-label-floating">زمان ورود 2</label>
-                                    <input type="time" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group bmd-form-group">
-                                    <label class="bmd-label-floating">زمان خروج 2</label>
-                                    <input type="time" class="form-control" />
+                                <div class="col-md-1">
+                                    <div class="form-group bmd-form-group">
+                                        <button class="btn btn-primary" type="button" onclick="addItem()">
+                                            <span style="margin: 0%" class="fa fa-plus"></span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group bmd-form-group">
-                                    <label class="bmd-label-floating">زمان ورود 3</label>
-                                    <input type="time" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group bmd-form-group">
-                                    <label class="bmd-label-floating">زمان خروج 3</label>
-                                    <input type="time" class="form-control" />
-                                </div>
-                            </div>
-                        </div>
+
+                        <div id="showAttributes" class="col-md-12"></div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">بی خیال</button>
+                    <button type="button" class="btn btn-primary" onclick="sendTimeList()">ثبت زمان</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    let timeList = [];
+
+    const addItem = () => {
+        const Toast = Swal.mixin({
+            position: "center",
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener("mouseenter", Swal.stopTimer);
+                toast.addEventListener("mouseleave", Swal.resumeTimer);
+            },
+        });
+
+        const showAttrDiv = document.querySelector("#showAttributes");
+        const inputStartTime = document.getElementById("startTime");
+        const inputEndTime = document.getElementById("endTime");
+        let generateID = Math.floor(Math.random() * 1000) + 1;
+
+        if (inputStartTime.value == "" || inputEndTime.value == "") {
+            return Toast.fire({ icon: "error", title: "زمان ورود و خروج اشتباه می باشد" });
+        }
+        if (timeList.find((item) => item.StartTime == inputStartTime.value)) {
+            return Toast.fire({ icon: "error", title: "زمان ورود شده تکراری می باشد" });
+        }
+        if (timeList.find((item) => item.EndTime == inputEndTime.value)) {
+            return Toast.fire({ icon: "error", title: "زمان خروج شده تکراری می باشد" });
+        }
+        timeList.push({
+            id: generateID,
+            StartTime: inputStartTime.value.trim(),
+            EndTime: inputEndTime.value.trim(),
+        });
+
+        showAttrDiv.innerHTML += `
+                <div id="numTime_${generateID}" class="callout callout-info row" style="max-height: 50px;flex-direction: column;align-items: center;">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group bmd-form-group">
+                                <label class="bmd-label-static" for="startTime">زمان ورود</label>
+                                <input type="time" class="form-control" value="${inputStartTime.value}" disabled id="startTime" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group bmd-form-group">
+                                <label class="bmd-label-static" for="endTime">زمان خروج</label>
+                                <input type="time" class="form-control" id="endTime" disabled value="${inputEndTime.value}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <button class="btn btn-danger btn-file" type="button" onclick="removeItem('numTime_${generateID}')">
+                                <span style="margin: 0%;" class="fa fa-remove">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        inputStartTime.value = inputEndTime.value = "";
+    };
+
+    const removeItem = (id) => {
+        const showAttrDiv = document.querySelector(`#${id}`);
+        showAttrDiv.remove();
+
+        const cloneTimeList = timeList.filter((item) => item.id != id.split("_")[1]);
+        timeList = [...cloneTimeList];
+    };
+
+    const sendTimeList = () => {
+        const Toast = Swal.mixin({
+            position: "center",
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener("mouseenter", Swal.stopTimer);
+                toast.addEventListener("mouseleave", Swal.resumeTimer);
+            },
+        });
+
+        if (timeList.length == 0) {
+            return Toast.fire({ icon: "error", title: "زمانی برای ذخیره سازی اضافه نکردید" });
+        }
+
+        try {
+            const datePiker = document.getElementsByClassName("observer-example")[0].value;
+
+            axios
+                .post("/dashboard/working/newTime", { datePiker, timeList })
+                .then(function (response) {
+                    timeList = [];
+                    const showAttrDiv = document.querySelector(`#showAttributes`);
+                    showAttrDiv.innerHTML = "";
+                    return Toast.fire({ icon: "success", title: response.data.message });
+                })
+                .catch(function (error) {
+                    return Toast.fire({ icon: "error", title: error.response.data.message });
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+</script>
