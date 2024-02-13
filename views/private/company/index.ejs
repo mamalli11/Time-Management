@@ -3,72 +3,152 @@
         <div class="row">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header card-header-primary">
-                        <h4 class="card-title">ویرایش پروفایل کاربری</h4>
-                        <p class="card-category">مشخصات خود را کامل کنید</p>
+                    <div class="card-header card-header-warning d-flex">
+                        <div>
+                            <h4 class="card-title d-flex justify-content-start">شرکت های ثبت شد</h4>
+                            <p class="card-category d-flex justify-content-start">لیست شرکت های که در آن کارکرده اید</p>
+                        </div>
+                        <div class="ml-auto">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newCompany">شرکت جدید</button>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <form>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="bmd-label-floating">تلفن همراه</label>
-                                        <input type="text" class="form-control" value="<%= user.phone %>" />
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="bmd-label-floating">ایمیل</label>
-                                        <input type="email" class="form-control" value="<%= user.email %>" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="bmd-label-floating">نام و نام خانوادگی</label>
-                                        <input type="text" class="form-control" value="<%= user.fullName %>" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="bmd-label-floating">جنسیت</label>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="sexRadioOptions" id="inlineRadio1" value="man" />
-                                            <label class="form-check-label" for="inlineRadio1">مرد</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="sexRadioOptions" id="inlineRadio2" value="woman" />
-                                            <label class="form-check-label" for="inlineRadio2">زن</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary pull-right">بروزرسانی پروفایل</button>
-                            <div class="clearfix"></div>
-                        </form>
+                    <div class="card-body table-responsive">
+                        <table class="table table-hover">
+                            <thead class="text-warning">
+                                <th>ردیف</th>
+                                <th>لوگو</th>
+                                <th>نام شرکت</th>
+                                <th>زمان شروع به کار</th>
+                                <th>آخرین زمان کاری شما</th>
+                                <th>وضعیت</th>
+                            </thead>
+                            <tbody>
+                                <% let index = 1; for(let company of companys) { %>
+                                <tr id="<%= company.id %>">
+                                    <td title="<%= company.id %>" class="text-center align-middle"><%= index %></td>
+                                    <td><img src="<%= company.logo %>" alt="Company logo" width="50px" height="50px" /></td>
+                                    <td><%= company.companyName %></td>
+                                    <td><%= moment(company.startDate); %></td>
+                                    <td><%= company.workingTimes.length != 0 ? moment(company.workingTimes[company.workingTimes.length - 1].date) : 0 %></td>
+                                    <td><%= company.status %></td>
+                                </tr>
+
+                                <% index++ } %>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+
             <div class="col-md-4">
                 <div class="card card-profile">
                     <div class="card-avatar">
-                        <a href="javascript:;">
-                            <img class="img" src="<%= user.profile %>" />
-                        </a>
+                        <img class="img" src="<%= companys[companys.length - 1].logo %>" />
                     </div>
                     <div class="card-body">
-                        <h6 class="card-category text-gray">CEO / Co-Founder</h6>
-                        <h4 class="card-title"><%= user.fullName %></h4>
-                        <p class="card-description">
-                            Don't be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love
-                            Rick Owens’ bed design but the back is...
-                        </p>
+                        <h4 class="card-title"><%= companys[companys.length - 1].companyName %></h4>
+                        <h6 class="card-category text-gray">شرکتی که در حال حاضر در آن کار میکنید</h6>
+                        <p class="card-description"><%= companys[companys.length - 1].address %></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="newCompany" tabindex="-1" aria-labelledby="newTimeLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">ثبت شرکت جدید</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <label class="bmd-label-floating">نام شرکت</label>
+                                <input type="text" class="form-control" name="companyName" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group bmd-form-group">
+                                <label class="bmd-label-static">تاریخ شروع کار</label>
+                                <input type="text" class="form-control observer-example" name="startDate" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group bmd-form-group">
+                                <label class="bmd-label-static">میزان مرخصی در ماه</label>
+                                <input type="number" class="form-control" maxlength="3" name="maxLeavePerMonth" />
+                                <h6>میزان مرخصی را به ساعت وارد کنید</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <label class="bmd-label-floating">لینک لوگو شرکت</label>
+                                <input type="url" class="form-control" name="logo" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <label class="bmd-label-floating">آدرس</label>
+                                <textarea rows="3" class="form-control" name="address"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">بی خیال</button>
+                <button type="submit" class="btn btn-primary" onclick="sendNewCompany()">ذخیره</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const sendNewCompany = () => {
+        const Toast = Swal.mixin({
+            position: "center",
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener("mouseenter", Swal.stopTimer);
+                toast.addEventListener("mouseleave", Swal.resumeTimer);
+            },
+        });
+
+        try {
+            const companyName = document.getElementsByName("companyName")[0].value;
+            const startDate = document.getElementsByClassName("observer-example")[0].value;
+            const maxLeavePerMonth = document.getElementsByName("maxLeavePerMonth")[0].value;
+            const logo = document.getElementsByName("logo")[0].value;
+            const address = document.getElementsByName("address")[0].value;
+            console.log({ companyName, startDate, maxLeavePerMonth, logo, address });
+            axios
+                .post("/dashboard/working/newCompany", { companyName, startDate, maxLeavePerMonth, logo, address })
+                .then(function (response) {
+                    Toast.fire({ icon: "success", title: response.data.message });
+                    setTimeout(function () { location.reload(); }, 1600);
+                })
+                .catch(function (error) {
+                    return Toast.fire({ icon: "error", title: error.response.data.message });
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+</script>

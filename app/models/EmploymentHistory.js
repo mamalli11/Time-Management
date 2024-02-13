@@ -1,12 +1,12 @@
 const { Schema, model } = require("mongoose");
 
 const TimeSchema = new Schema({
-    date: { type: String, required: true },
+    date: { type: Date, required: true },
     times: [{ type: Object, required: true }],
 });
 
 const LeaveSchema = new Schema({
-    date: { type: String, required: true },
+    date: { type: Date, required: true },
     times: { type: String, required: true },
     leaveType: {
         type: String,
@@ -31,6 +31,7 @@ const EmploymentHistorySchema = new Schema({
     workingTimes: [{ type: TimeSchema }],
     leaves: [{ type: LeaveSchema }],
     salaries: [{ type: SalarySchema }],
+    status: { type: String, default: "Work in progress", enum: ["laying off", "Work in progress", "settlement"] },
 });
 
 module.exports = model("EmploymentHistory", EmploymentHistorySchema);
