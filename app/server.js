@@ -64,10 +64,10 @@ module.exports = class Application {
         this.#app.set("view engine", "ejs");
         this.#app.set("views", "views");
         this.#app.set("layout", "./layouts/dashLayout");
-        this.#app.use(function (req, res, next) {
-            res.locals = { USER: req.user };
-            next();
-        });
+        // this.#app.use(function (req, res, next) {
+        //     res.locals = { USER: req.user };
+        //     next();
+        // });
     }
     initClientSession() {
         this.#app.use(cookieParser(process.env.COOKIE_PARSER_SECRET_KEY));

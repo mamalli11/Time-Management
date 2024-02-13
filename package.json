@@ -29,6 +29,7 @@
       "express": "^4.18.2",
       "express-ejs-layouts": "^2.5.1",
       "express-session": "^1.17.3",
+      "moment-jalaali": "^0.10.0",
       "mongoose": "^6.12.3",
       "mongoose-paginate-v2": "^1.7.4",
       "morgan": "^1.10.0",

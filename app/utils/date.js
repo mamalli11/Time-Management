@@ -1,3 +1,5 @@
+const moment = require("moment-jalaali");
+
 function jalaliToUTCTimeStamp(year, month, day) {
     const format = new Intl.DateTimeFormat("en-u-ca-persian", { dateStyle: "short", timeZone: "UTC" });
     let g = new Date(Date.UTC(2000, month, day));
@@ -38,4 +40,21 @@ function toEnglishDigits(num) {
         : null;
 }
 
-module.exports = { toEnglishDigits, jalaliToUTCTimeStamp };
+moment.loadPersian({ usePersianDigits: true, dialect: "persian-modern" });
+
+function convertToPersianDate(utcDate) {
+    return moment(utcDate).format('jYYYY/jM/jD'); // فرمت تاریخ شمسی
+}
+const PersianDate = (date) => {
+    const nDate = new Date(date);
+    const dateOptions = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    };
+
+    return nDate.toLocaleDateString("fa-IR", dateOptions);
+};
+
+module.exports = { toEnglishDigits, jalaliToUTCTimeStamp, convertToPersianDate, PersianDate };
