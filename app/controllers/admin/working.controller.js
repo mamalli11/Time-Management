@@ -19,6 +19,20 @@ class WorkingController extends Controller {
             next(err);
         }
     }
+    async deleteCompany(req, res, next) {
+        try {
+            const { companyId } = req.params;
+            const company = await EmploymentHistory.findByIdAndRemove(companyId);
+            const users = await Users.findById(req.user.id).select("employmentHistory");
+            console.log({ companyId,company, users });
+            users.employmentHistory = users.employmentHistory.filter((el) => el.toString().indexOf(companyId) == -1);
+            await users.save();
+
+            res.status(200).json({ message: "شرکت حذف شد." });
+        } catch (err) {
+            next(err);
+        }
+    }
     async handelSaveWorkingTime(req, res, next) {
         try {
             const { datePiker, timeList } = req.body;

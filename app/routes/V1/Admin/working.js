@@ -18,4 +18,8 @@ router.post("/newTime",   WorkingController.handelSaveWorkingTime);
 // router.post("/newCompany", authenticated, WorkingController.createCompany);
 router.post("/newCompany", WorkingController.createCompany);
 
+//^  @desc   Delete Company
+//&  @route  DELETE /
+router.delete("/deleteCompany/:companyId", WorkingController.deleteCompany);
+
 module.exports = { WorkingRouter: router };

@@ -21,6 +21,7 @@
                                 <th>زمان شروع به کار</th>
                                 <th>آخرین زمان کاری شما</th>
                                 <th>وضعیت</th>
+                                <th></th>
                             </thead>
                             <tbody>
                                 <% let index = 1; for(let company of companys) { %>
@@ -31,6 +32,14 @@
                                     <td><%= moment(company.startDate); %></td>
                                     <td><%= company.workingTimes.length != 0 ? moment(company.workingTimes[company.workingTimes.length - 1].date) : 0 %></td>
                                     <td><%= company.status %></td>
+                                    <td>
+                                        <button class="btn btn-white btn-round btn-just-icon">
+                                            <i class="material-icons">visibility</i>
+                                        </button>
+                                        <button class="btn btn-white btn-round btn-just-icon" onclick="deleteCompany('<%= company.id %>')">
+                                            <i class="material-icons">delete_forever</i>
+                                        </button>
+                                    </td>
                                 </tr>
 
                                 <% index++ } %>
@@ -43,12 +52,12 @@
             <div class="col-md-4">
                 <div class="card card-profile">
                     <div class="card-avatar">
-                        <img class="img" src="<%= companys[companys.length - 1].logo %>" />
+                        <img class="img" src="<%= companys.length != 0 ? companys[companys.length - 1].logo : "" %>" />
                     </div>
                     <div class="card-body">
-                        <h4 class="card-title"><%= companys[companys.length - 1].companyName %></h4>
+                        <h4 class="card-title"><%= companys.length != 0 ? companys[companys.length - 1].companyName :' شما هیچ شرکتی ثبت نکرده اید' %></h4>
                         <h6 class="card-category text-gray">شرکتی که در حال حاضر در آن کار میکنید</h6>
-                        <p class="card-description"><%= companys[companys.length - 1].address %></p>
+                        <p class="card-description"><%= companys.length != 0 ? companys[companys.length - 1].address : ' شما هیچ شرکتی ثبت نکرده اید '%></p>
                     </div>
                 </div>
             </div>
@@ -118,7 +127,6 @@
 </div>
 
 <script>
-
     const sendNewCompany = () => {
         const Toast = Swal.mixin({
             position: "center",
@@ -142,7 +150,9 @@
                 .post("/dashboard/working/newCompany", { companyName, startDate, maxLeavePerMonth, logo, address })
                 .then(function (response) {
                     Toast.fire({ icon: "success", title: response.data.message });
-                    setTimeout(function () { location.reload(); }, 1600);
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1600);
                 })
                 .catch(function (error) {
                     return Toast.fire({ icon: "error", title: error.response.data.message });
@@ -150,5 +160,37 @@
         } catch (error) {
             console.log(error);
         }
+    };
+
+    const deleteCompany = (companyId) => {
+        console.log(companyId);
+
+        Swal.fire({
+            title: "مطمئنی؟",
+            text: "شما دیگر نمی توانید این را برگردانید!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "بله ، آن را حذف کنید!",
+        }).then((result) => {
+            if (result.value) {
+                try {
+                    axios
+                        .delete(`/dashboard/working/deleteCompany/${companyId}`)
+                        .then(function (response) {
+                            Swal.fire({ title: "پاک شد!", text: "شرکت شما حذف شده است", icon: "success" });
+                            // setTimeout(function () {
+                            //     location.reload();
+                            // }, 1600);
+                        })
+                        .catch(function (error) {
+                            Swal.fire({ title: "خطا!", text: "خطایی در انجام فرایند رخ داده است", icon: "warning" });
+                        });
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        });
     };
 </script>
